@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index.html</title>
+    <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //发送post请求
+            function sendRequest() {
+                var num1 = $("#num1").val();
+                var num2 = $("#num2").val();
+                var reqParam = {'data': [{'number1': num1, 'number2': num2}]};
+                $.ajax({
+                    url: 'http://localhost:9090/cal/sum',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reqParam),
+                    success: function (res) {
+                        if (res.status) {
+                            alert(res.message);
+                            return;
+                        }
+                        //渲染结果
+                        $("#result").html(res.data[0].sum);
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseJSON.message);
+                    }
+                });
+            };
+            //绑定点击事件
+            $("#sum").click(function () {
+                sendRequest();
+            });
+        });
+    </script>
+</head>
+<body>
+输入：<br/>
+{<br/>
+&nbsp;&nbsp;"data":[<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"number1": "<input id="num1"/>",//第一个数值<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"number2": "<input id="num2"/>"//第二个数值<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;]<br/>
+}<br/>
+<button id="sum" value="求和">求和</button><br/>
+<br/>
+输出：<br/>
+{<br/>
+&nbsp;&nbsp;"data":[<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" sum": "<span id="result">string</span>"//求和结果<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;]<br/>
+}<br/>
+</body>
+</html>
